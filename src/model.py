@@ -5,6 +5,8 @@ import torch.nn as nn
 
 from tree import Node, BatchedNode
 from symbol_library import SymType
+# from src.tree import Node, BatchedNode
+# from src.symbol_library import SymType
 
 
 class HVAE(nn.Module):
