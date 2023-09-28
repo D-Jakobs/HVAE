@@ -1,18 +1,10 @@
 from symbol_library import generate_symbol_library, SymType
 import numpy as np
-# from ProGED.generators import GeneratorGrammar
+from utils import load_config_file
+from ProGED.generators import GeneratorGrammar
 from tree import Node
 import json
 
-################################################################
-################################################################
-#################################################################
-
-# TODO: Integrate proged and check if the script works
-
-################################################################
-##################################################################
-##################################################################
 def generate_grammar(symbols):
     grammar = ""
     operators = {}
@@ -149,7 +141,7 @@ def generate_expressions(grammar, number_of_expressions, symbol_objects, has_con
     expressions = []
     while len(expression_set) < number_of_expressions:
         if len(expression_set) % 500 == 0:
-            print(len(expression_set))
+            print(f"Unique expressions generated so far: {len(expression_set)}")
         expr = generator.generate_one()[0]
         if has_constants:
             pass
@@ -206,20 +198,39 @@ if __name__ == '__main__':
     number_of_expressions = 100
     max_tree_depth = 7
     # Optional: Generate training set from a custom grammar
+    config = load_config_file("../configs/test_config.json")
+    expr_config = config["expression_definition"]
+    es_config = config["expression_set_generation"]
+    sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
+    Node.add_symbols(sy_lib)
+    so = {s["symbol"]: s for s in sy_lib}
+
+    # Optional (recommended): Generate training set from a custom grammar
     grammar = None
 
     so = generate_symbol_library(num_variables, symbols, has_constants)
     # Based on desired Symbols selected by the User, retrieves a dictionary of symbol in the proper data format to be further used. Other symbols and variable names can be included here
     #  
+    config = load_config_file("../configs/test_config.json")
+    expr_config = config["expression_definition"]
+    es_config = config["expression_set_generation"]
+    sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
+    Node.add_symbols(sy_lib)
+    so = {s["symbol"]: s for s in sy_lib}
+
+    # Optional (recommended): Generate training set from a custom grammar
+    grammar = None
+
     if grammar is None:
-        grammar = generate_grammar(so)
+        grammar = generate_grammar(sy_lib)
 
-    print(grammar)
+    # print(grammar)
 
-    expressions = generate_expressions(grammar, number_of_expressions, {s["symbol"]: s for s in so}, has_constants, max_depth=max_tree_depth)
+    expressions = generate_expressions(grammar, es_config["num_expressions"], so, expr_config["has_constants"], max_depth=es_config["max_tree_height"])
 
     expr_dict = [tree.to_dict() for tree in expressions]
 
-    # with open("../data/train_sets/ng1_7.json", "w") as file:
-    with open("../data/train_sets/test_100_1.json", "w") as file:
-        json.dump(expr_dict, file)
+    save_path = es_config["expression_set_path"]
+    if save_path != "":
+        with open(save_path, "w") as file:
+            json.dump(expr_dict, file)
