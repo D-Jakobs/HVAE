@@ -13,6 +13,8 @@ def generate_grammar(symbols):
     powers = []
     variables = []
     constants = False
+# build list/dictionaries of all symbol types. The operators are split into addition/subtraction, multiplication and powers. I believe the presedence is to differentiate between clases of opperators and to later enfore the order of opperations   
+
     for symbol in symbols:
         if symbol["type"].value == SymType.Operator.value:
             if symbol["precedence"] in operators:
@@ -30,6 +32,8 @@ def generate_grammar(symbols):
         else:
             raise Exception("Error during generation of the grammar")
 
+# Look through the precedences and creates & prints a probability that a function with either use this opperator or no do anything. 
+# not sure what the E-> F and F-> T quite means.... Expression to function? function to Trig?
     if 0 in operators:
         op_prob = 0.4 / len(operators[0])
         for op in operators[0]:
@@ -160,17 +164,43 @@ def generate_expressions(grammar, number_of_expressions, symbol_objects, has_con
     return expressions
 
 
-if __name__ == '__main__':
-    config = load_config_file("../configs/test_config.json")
-    expr_config = config["expression_definition"]
-    es_config = config["expression_set_generation"]
-    sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
-    Node.add_symbols(sy_lib)
-    so = {s["symbol"]: s for s in sy_lib}
+def run_expression_set_generation(symbol_objects, num_expressions=100, max_tree_depth=7, has_constants=False, input_grammar=None, save_name=None ):
+    # Optional: Generate training set from a custom grammar
+    grammar = input_grammar
 
-    # Optional (recommended): Generate training set from a custom grammar
+    # Based on desired Symbols selected by the User, retrieves a dictionary of symbol in the proper data format to be further used. Other symbols and variable names can be included here
+    #  
+    if grammar is None:
+        grammar = generate_grammar(symbol_objects)
+
+    print(grammar)
+
+    expressions = generate_expressions(grammar, num_expressions, {s["symbol"]: s for s in symbol_objects}, has_constants, max_depth=max_tree_depth)
+
+    expr_dict = [tree.to_dict() for tree in expressions]
+
+    if save_name != None:
+        expression_path = "../data/train_sets/" +  save_name + ".json"
+    else:
+        expression_path = "../data/train_sets/" + str(num_expressions) + ".json"
+    # with open("../data/train_sets/ng1_7.json", "w") as file:
+    # with open("../data/train_sets/test_100_1.json", "w") as file:
+    with open(expression_path, "w") as file:
+        json.dump(expr_dict, file)
+    
+    return expression_path
+
+
+if __name__ == '__main__':
+    symbols = ["+", "-", "*", "/", "sin", "cos", "exp", "sqrt", "log", "^2", "^3", "^4", "^5"]
+    num_variables = 1
+    has_constants = False
+    number_of_expressions = 50000
+    max_tree_depth = 7
+    # Optional: Generate training set from a custom grammar
     grammar = None
 
+    so = generate_symbol_library(num_variables, symbols, has_constants)
     if grammar is None:
         grammar = generate_grammar(sy_lib)
 
@@ -180,7 +210,5 @@ if __name__ == '__main__':
 
     expr_dict = [tree.to_dict() for tree in expressions]
 
-    save_path = es_config["expression_set_path"]
-    if save_path != "":
-        with open(save_path, "w") as file:
-            json.dump(expr_dict, file)
+    with open("../data/train_sets/ng1_7.json", "w") as file:
+        json.dump(expr_dict, file)
