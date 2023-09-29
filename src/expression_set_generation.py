@@ -192,15 +192,17 @@ def run_expression_set_generation(symbol_objects, num_expressions=100, max_tree_
 
 
 if __name__ == '__main__':
-    symbols = ["+", "-", "*", "/", "sin", "cos", "exp", "sqrt", "log", "^2", "^3", "^4", "^5"]
-    num_variables = 1
-    has_constants = False
-    number_of_expressions = 50000
-    max_tree_depth = 7
-    # Optional: Generate training set from a custom grammar
+    config = load_config_file("./configs/test_config.json")
+    # config = load_config_file("../configs/test_config.json")
+    expr_config = config["expression_definition"]
+    es_config = config["expression_set_generation"]
+    sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
+    Node.add_symbols(sy_lib)
+    so = {s["symbol"]: s for s in sy_lib}
+
+    # Optional (recommended): Generate training set from a custom grammar
     grammar = None
 
-    so = generate_symbol_library(num_variables, symbols, has_constants)
     if grammar is None:
         grammar = generate_grammar(sy_lib)
 
@@ -210,5 +212,7 @@ if __name__ == '__main__':
 
     expr_dict = [tree.to_dict() for tree in expressions]
 
-    with open("../data/train_sets/ng1_7.json", "w") as file:
-        json.dump(expr_dict, file)
+    save_path = es_config["expression_set_path"]
+    if save_path != "":
+        with open(save_path, "w") as file:
+            json.dump(expr_dict, file)

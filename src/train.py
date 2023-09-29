@@ -92,7 +92,7 @@ def train_hvae(model, trees, epochs=20, batch_size=32, verbose=True):
 
 
 if __name__ == '__main__':
-    config = load_config_file("../configs/test_config.json")
+    config = load_config_file("./configs/test_config.json")
     expr_config = config["expression_definition"]
     es_config = config["expression_set_generation"]
     training_config = config["training"]

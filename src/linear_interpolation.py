@@ -21,14 +21,14 @@ def interpolateAB(model, treeA, treeB, steps=5):
 
 
 if __name__ == '__main__':
-    config = load_config_file("../configs/test_config.json")
+    config = load_config_file("./configs/test_config.json")
     expr_config = config["expression_definition"]
     es_config = config["expression_set_generation"]
     sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
     so = {s["symbol"]: s for s in sy_lib}
     HVAE.add_symbols(sy_lib)
 
-    param_file = "../params/ng1_7.pt"
+    param_file = "./params/ng1_7.pt"
     model = torch.load(param_file)
 
     exprA = "cos ( A * A + A ) + exp ( A ) / A"
@@ -40,4 +40,4 @@ if __name__ == '__main__':
     treeA = tokens_to_tree(tokensA, so)
     treeB = tokens_to_tree(tokensB, so)
 
-    interpolateAB(model, treeA, treeB)
+    interpolateAB(model, treeA, treeB, steps=100)
