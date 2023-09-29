@@ -1,6 +1,6 @@
 from symbol_library import generate_symbol_library, SymType
 import numpy as np
-from hvae_utils import load_config_file
+from utilsHVAE import load_config_file
 from ProGED.generators import GeneratorGrammar
 from tree import Node
 import json
@@ -161,7 +161,7 @@ def generate_expressions(grammar, number_of_expressions, symbol_objects, has_con
         except:
             continue
 
-    return expressions
+    return expressions, expression_set
 
 
 def run_expression_set_generation(symbol_objects, num_expressions=100, max_tree_depth=7, has_constants=False, input_grammar=None, save_name=None ):
@@ -192,8 +192,9 @@ def run_expression_set_generation(symbol_objects, num_expressions=100, max_tree_
 
 
 if __name__ == '__main__':
-    config = load_config_file("./configs/test_config.json")
-    # config = load_config_file("../configs/test_config.json")
+    # config = load_config_file("../configs/reconstruction_config.json")
+    
+    config = load_config_file("./configs/ratelaw_config.json")
     expr_config = config["expression_definition"]
     es_config = config["expression_set_generation"]
     sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
@@ -208,7 +209,7 @@ if __name__ == '__main__':
 
     # print(grammar)
 
-    expressions = generate_expressions(grammar, es_config["num_expressions"], so, expr_config["has_constants"], max_depth=es_config["max_tree_height"])
+    expressions, expression_strs = generate_expressions(grammar, es_config["num_expressions"], so, expr_config["has_constants"], max_depth=es_config["max_tree_height"])
 
     expr_dict = [tree.to_dict() for tree in expressions]
 
