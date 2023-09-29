@@ -6,7 +6,7 @@ from torch.utils.data import Sampler, Dataset, DataLoader
 from tqdm import tqdm
 
 # from utils import tokens_to_tree, read_expressions
-from utils import read_expressions_json, load_config_file, create_batch
+from utilsHVAE import read_expressions_json, load_config_file, create_batch
 from model import HVAE
 from symbol_library import generate_symbol_library
 from tree import BatchedNode
@@ -95,7 +95,9 @@ def train_hvae(model, trees, epochs=20, batch_size=32, verbose=True):
 
 
 if __name__ == '__main__':
-    config = load_config_file("./configs/test_config.json")
+
+    # config = load_config_file("./configs/test_config.json")
+    config = load_config_file("./configs/ratelaw_config.json")
     expr_config = config["expression_definition"]
     es_config = config["expression_set_generation"]
     training_config = config["training"]

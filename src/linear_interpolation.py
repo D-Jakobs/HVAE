@@ -1,7 +1,7 @@
 import torch
 
 from model import HVAE
-from utils import tokens_to_tree, load_config_file, create_batch
+from utilsHVAE import tokens_to_tree, load_config_file, create_batch
 from symbol_library import generate_symbol_library
 
 
@@ -33,11 +33,16 @@ if __name__ == '__main__':
 
     exprA = "cos ( A * A + A ) + exp ( A ) / A"
     exprB = "A ^2 - A ^3"
+    #exprC = "A * A"
     steps = 5
 
     tokensA = exprA.split(" ")
     tokensB = exprB.split(" ")
     treeA = tokens_to_tree(tokensA, so)
     treeB = tokens_to_tree(tokensB, so)
+
+    # tokensC = exprC.split(" ")
+    # treeC =tokens_to_tree(tokensC, so)
+    # interpolateAB(model,treeA, treeC)
 
     interpolateAB(model, treeA, treeB, steps=100)
