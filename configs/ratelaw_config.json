@@ -6,7 +6,7 @@
     },
     "expression_set_generation": {
       // Parameters for creating a new training set
-      "num_expressions": 10,
+      "num_expressions": 100,
       "max_tree_height": 7,
       // Path where the generated expression set will be saved. If empty string, the expression set won't be saved
       "expression_set_path": "./data/expression_sets/rate_trees_7_20k.json"
