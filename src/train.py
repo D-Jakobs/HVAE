@@ -94,6 +94,8 @@ def train_hvae(model, trees, epochs=20, batch_size=32, verbose=True):
 
 if __name__ == '__main__':
 
+    import os 
+    os.chdir("./Code")
     # config = load_config_file("./configs/test_config.json")
     config = load_config_file("./configs/ratelaw_config.json")
     expr_config = config["expression_definition"]
