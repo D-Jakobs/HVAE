@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="HVAE",
-    version="0.1",
+    version="1.0.0",
     url="https://github.com/D-Jakobs/HVAE/tree/AESR",
     description="Hierarchical Variational Autoencoder",
     author="Sebasitan Meznar",
