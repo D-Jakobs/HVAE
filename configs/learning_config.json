@@ -1,0 +1,35 @@
+// This config file is not part of the original HVAE package, but is made by me for you to 
+// play around with and learn from
+{
+    "expression_definition": {
+      // Operators and functions that occur in expressions
+      // Example of possible symbols. See Symbol Library for all availible symbols
+      //"symbols": ["+", "-", "*", "/", "sin", "cos", "exp", "sqrt", "log", "^2", "^3", "^4", "^5"],
+    
+      "symbols": ["+", "-", "*", "/", "sin", "cos", "sqrt", "^2", "^3", "^4", "^5"],
+      // Number of variables that occur in expressions
+      "num_variables": 3,
+      // True if expressions also contain constant parameters, otherwise false
+      "has_constants": true
+    },
+    "expression_set_generation": {
+        // Parameters for creating a new training set
+        "num_expressions": 15000, // 40000
+        // Max height of the generated expression trees
+        "max_tree_height": 7,
+        // Path where the generated expression set will be saved. If empty string, the expression set won't be saved
+        // This path is also used in training and reconstruction script as input into the model
+        "expression_set_path": "./HVAE/data/expression_sets/learning_7_15k.json"
+      },
+      "training": {
+        // Number of epochs the model trains for
+        "epochs": 20,
+        "batch_size": 64, // 32 
+        "verbose": true,
+        // Dimensionality of the latent space
+        "latent_size": 32,
+        "seed": 18,
+        // Path where model parameters will be saved. If empty string, the parameters won't be saved
+        "param_path": "./HVAE/params/learning_7.pt"
+      }
+    }

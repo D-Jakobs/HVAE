@@ -93,8 +93,9 @@ def train_hvae(model, trees, epochs=20, batch_size=32, verbose=True):
 
 
 if __name__ == '__main__':
+    # get and load the config file
     parser = ArgumentParser(prog='Model training', description='Train a HVAE model')
-    parser.add_argument("-config", default="../configs/test_config.json")
+    parser.add_argument("-config", default="./HVAE/configs/learning_config.json")
     args = parser.parse_args()
 
     config = load_config_file(args.config)
@@ -106,9 +107,11 @@ if __name__ == '__main__':
         np.random.seed(training_config["seed"])
         torch.manual_seed(training_config["seed"])
 
+
     sy_lib = generate_symbol_library(expr_config["num_variables"], expr_config["symbols"], expr_config["has_constants"])
     HVAE.add_symbols(sy_lib)
 
+    # load the data set to tain the model
     trees = read_expressions_json(es_config["expression_set_path"])
 
     model = HVAE(len(sy_lib), training_config["latent_size"])

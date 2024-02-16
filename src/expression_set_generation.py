@@ -165,7 +165,7 @@ def generate_expressions(grammar, number_of_expressions, symbol_objects, has_con
 
 if __name__ == '__main__':
     parser = ArgumentParser(prog='Expression set generation', description='Generate a set of expressions')
-    parser.add_argument("-config", default="../configs/test_config.json")
+    parser.add_argument("-config", default="./HVAE/configs/learning_config.json")
     args = parser.parse_args()
 
     config = load_config_file(args.config)
@@ -181,7 +181,7 @@ if __name__ == '__main__':
     if grammar is None:
         grammar = generate_grammar(sy_lib)
 
-    # print(grammar)
+    print(grammar)
 
     expressions = generate_expressions(grammar, es_config["num_expressions"], so, expr_config["has_constants"], max_depth=es_config["max_tree_height"])
 
